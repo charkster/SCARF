@@ -23,7 +23,7 @@ pat_gen.cfg_stage1_count(stage1_count=12)
 counter.counter_enable(enable_nibble=0x01) # enable the counter to capture the high duration on gpio1
 pat_gen.cfg_enable()
 time.sleep(1)
-print "high duration was %g us" % (counter.get_count_val(1,1) * (1.0/12.0))
+print "high duration was %g us" % (counter.get_count_val(1,1))
 
 read_data = sram.read_list(addr=0x000000,num_bytes=3)
 address = 0
