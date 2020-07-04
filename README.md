@@ -11,7 +11,7 @@ Whether you have a single design to implement in the FPGA or several, they all c
 SPI interface. For simplicity the SPI slave works only with CPOL=0 and CPHA=0.
 
 Why use SCARF? If you want to send data to/from your FPGA using a Raspberry Pi, the SPI bus is
-fast and has low overhead. The SCARF block is less than 50 flipflops and the interface is very simple.
+fast and has low overhead. The SCARF block is less than 60 flipflops and the interface is very simple.
 Once you see how easy it is to interface to your FPGA designs, say good-bye to custom interfaces.
 SCARF has a mechanism for individual designs to respond to a generic query command, which can be
 used to see all SCARF slaves on the bus. In my bench FPGA I have 20 or more designs implemented
