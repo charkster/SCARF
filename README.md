@@ -26,3 +26,9 @@ In the verilog directory scarf_top.sv is the top-level.
 
 In the docs directory I am missing a document describing how edge_counter.sv works... I should be adding
 that soon. I use a single SCARF register map to control 4 instances of edge_counters.
+
+SCARF can also be used as an emulation channel for mixed-signal ASICs or mixed-signal blocks on SOCs. This is 
+when the ASIC or SOC digital block is implemented in an FPGA. A SCARF register map can be implemented in the FPGA
+and loaded with DAC values which correspond to analog voltages and currents. ADC, autocal and comparator models can 
+be controlled with the loaded DAC values, and use-cases can be emulated (including fault conditions). This can be 
+very useful when testing firmware drivers for the ASIC or SOC before it tapes-out.
