@@ -1,5 +1,5 @@
 
-module tb_spi_slave_lbus ();
+module tb_scarf ();
 
    parameter EXT_CLK_PERIOD_NS = 83;
    parameter SCLK_PERIOD_NS = 83;
