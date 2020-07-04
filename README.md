@@ -23,3 +23,6 @@ to implement a sample SCARF design. This board has an external SRAM which is use
 examples. I wanted to show that SCARF can be used interface to memories directly.
 
 In the verilog directory scarf_top.sv is the top-level.
+
+In the docs directory I am missing a document describing how edge_counter.sv works... I should be adding
+that soon. I use a single SCARF register map to control 4 instances of edge_counters.
