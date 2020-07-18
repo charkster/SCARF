@@ -20,7 +20,7 @@ circuit board.
 
 My FPGA development board is a Digilent CMOD A7-35t, and I included the pin constraint file which I used
 to implement a sample SCARF design. This board has an external SRAM which is used in the verilog and python
-examples. I wanted to show that SCARF can be used interface to memories directly.
+examples. I wanted to show that SCARF can be used to interface to memories directly.
 
 In the verilog directory scarf_top.sv is the top-level.
 
