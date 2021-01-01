@@ -1,14 +1,14 @@
 
 module edge_counter
-  ( input  logic	    clk,
-    input  logic	    rst_n,
-    input  logic	    gpio_in,
+  ( input  logic	      clk,
+    input  logic	      rst_n,
+    input  logic	      gpio_in,
     input  logic        enable,
     input  logic        trig_enable,
-    input  logic	    trig_in,
-    output logic	    trig_out,
-    input  logic	    cfg_trig_out,
-    input  logic	    cfg_in_inv,
+    input  logic	      trig_in,
+    output logic	      trig_out,
+    input  logic	      cfg_trig_out,
+    input  logic	      cfg_in_inv,
     output logic [31:0] d1_count,
     output logic [31:0] d2_count,
     output logic [31:0] d3_count
