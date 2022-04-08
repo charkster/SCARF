@@ -1,4 +1,6 @@
 # SCARF
+![picture](https://github.com/charkster/SCARF/blob/master/docs/SCARF.png)
+
 SCARF - “Scarf Connects A Raspberry pi to Fpga”
 
 SCARF is a bare-bones SPI slave written in systemverilog, which clock-crosses input and output data
