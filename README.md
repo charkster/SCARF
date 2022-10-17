@@ -11,10 +11,15 @@ The **first byte** sent to the FPGA contains the **Slave ID and Read-not-Write b
 
 The next bytes are the **address data**. The provided RTL allows for a **parameterized** number of address bytes. A SDIO memory interface block might need many address bytes and a simple trigger block might just need a few bits from one byte of address data. The **number of address bytes is flexible**, but the RTL specified Slave ID and number of address bytes needs to be correctly transferred to the Python script.
 
-The next bytes are either the **write data** or in the case of a **read, filler bytes** to keep the chip select active (**SPI**). When doing a read, if 5 bytes are wanted, 6 filler bytes need to be written to the FPGA. As **UART does not have a chip select**, I have a **SCARF** version where the **number of bytes** to read is used instead of filler bytes. The Python code fully takes care of these **finer details**, while remaining **easy to read** and **understand.**
+The next bytes are either the **write data** or in the case of a **read, filler bytes** to keep the chip select active (**SPI**). When doing a read, if 5 bytes are wanted, 6 filler bytes need to be written to the FPGA. As **UART does not have a chip select**, I have a **SCARF** version where the **number of bytes** to read is used instead of filler bytes. The Python code fully takes care of these **finer details**, while remaining **easy to read and understand.**
 
 The **maximum number** of read/write data bytes is **determined by the hardware SPI or UART master.** The provided RTL has **no limit.** If the FPGA board’s **USB-UART** bridge is used, the TX and RX buffers are **fixed in size** and must not be exceeded. If **SPI** is used, the **SPI** master’s transmit and receive byte **limits** also must be followed. The provided Python code has places for these limits to be specified.
 
 When read data returns to the Host, the **first byte sent by the FPGA will be the RNW bit and Slave ID.** This can be used similar to how a I2C master can quickly **query all slaves connected** to the bus. This byte can be safely discarded.
 
 That’s it. My **Raspberry Pi** can reliably run a **SPI** clock of **12MHz**, and most FPGA on-board **USB-UART** bridges can run at **1M baud or faster.** 
+
+**This repository only contains the SPI implementation of SCARF.** See this [document](https://github.com/charkster/mux_board_v1/blob/main/docs/intro_to_scarf.pdf) to learn about the **SPI** implementation.
+
+My [tang_nano-uart_block_ram](https://github.com/charkster/tang_nano-uart_block_ram) repository has an excellent example of **UART SCARF**.
+The ["uart_byte_regmap_interface.sv"](https://github.com/charkster/tang_nano-uart_block_ram/blob/main/fpga/src/uart_byte_regmap_interface.sv) file is the **SCARF RTL** block which converts the **UART** data stream into **reads and writes**. 
