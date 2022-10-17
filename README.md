@@ -1,36 +1,20 @@
 # SCARF
 ![picture](https://github.com/charkster/SCARF/blob/master/docs/SCARF.png)
 
-SCARF - “Scarf Connects A Raspberry pi to Fpga”
+**SCARF - “Scarf Connects A Raspberry pi to Fpga”**
 
-SCARF is a bare-bones SPI slave written in systemverilog, which clock-crosses input and output data
-to the FPGA clock domain. It’s goal is to provide a simple, uniform interface to FPGA designs,
-allowing them to be easily controlled from a single external SPI master (A Raspberry pi).
+**UART** and **SPI** data streams can be **difficult** to organize when a Host (Raspberry Pi or PC) communicates with a FPGA slave. **I2C** is very **structured** in how it allows a single Host to communicate with **multiple slaves**. I wanted to **merge** the **structured aspects** of I2C with the **high-throughput** and **full-duplex** capabilities of **UART** and **SPI**. This is what **SCARF is, I2C like communication over UART and SPI buses.** I provide the simple RTL and Python code to talk to it.
 
-SCARF comes with python drivers and example code.
+**SCARF** really **shines** when the FPGA board has a **USB-UART** bridge chip, allowing the board to have **both power and communication on the same cable.** 
 
-Whether you have a single design to implement in the FPGA or several, they all can share a single 4pin
-SPI interface. For simplicity the SPI slave works only with CPOL=0 and CPHA=0.
+The **first byte** sent to the FPGA contains the **Slave ID and Read-not-Write bit**. The most significant bit is the **RNW bit** and the lower 7bits are the **Slave ID**. The **Slave ID** allows different blocks on the FPGA to **ignore** bus traffic when their ID is not given. The provided RTL has the **Slave ID** defined as a parameter.
 
-Why use SCARF? If you want to send data to/from your FPGA using a Raspberry Pi, the SPI bus is
-fast and has low overhead. The SCARF block is less than 60 flipflops and the interface is very simple.
-Once you see how easy it is to interface to your FPGA designs, say good-bye to custom interfaces.
-SCARF has a mechanism for individual designs to respond to a generic query command, which can be
-used to see all SCARF slaves on the bus. In my bench FPGA I have 20 or more designs implemented
-and SCARF keeps them all organized for me, just as if they were all individual ICs connected on a
-circuit board.
+The next bytes are the **address data**. The provided RTL allows for a **parameterized** number of address bytes. A SDIO memory interface block might need many address bytes and a simple trigger block might just need a few bits from one byte of address data. The **number of address bytes is flexible**, but the RTL specified Slave ID and number of address bytes needs to correctly transferred to the Python script.
 
-My FPGA development board is a Digilent CMOD A7-35t, and I included the pin constraint file which I used
-to implement a sample SCARF design. This board has an external SRAM which is used in the verilog and python
-examples. I wanted to show that SCARF can be used to interface to memories directly.
+The next bytes are either the **write data** or in the case of a **read, filler bytes** to keep the chip select active (**SPI**). When doing a read, if 5 bytes are wanted, 6 filler bytes need to be written to the FPGA. As **UART does not have a chip select**, I have a **SCARF** version where the **number of bytes** to read is used instead of filler bytes. 
 
-In the verilog directory scarf_top.sv is the top-level.
+The **maximum number** of read/write data bytes is **determined by the hardware SPI or UART master.** The provided RTL has **no limit.** If the FPGA board’s **USB-UART** bridge is used, the TX and RX buffers are **fixed in size** and must not be exceeded. If **SPI** is used, the **SPI** master’s transmit and receive byte **limits** also must be followed. The provided Python code has places for these limits to be specified.
 
-In the docs directory I am missing a document describing how edge_counter.sv works... I should be adding
-that soon. I use a single SCARF register map to control 4 instances of edge_counters.
+When read data returns to the Host, the **first byte sent by the FPGA will be the RNW bit and Slave ID.** This can be used similar to how a I2C master can quickly **query all slaves connected** to the bus. This byte can be safely discarded.
 
-SCARF can also be used as an emulation channel for mixed-signal ASICs or mixed-signal blocks on SOCs. This is 
-when the ASIC or SOC digital block is implemented in an FPGA. A SCARF register map can be implemented in the FPGA
-and loaded with DAC values which correspond to analog voltages and currents. ADC, autocal and comparator models can 
-be controlled with the loaded DAC values, and use-cases can be emulated (including fault conditions). This can be 
-very useful when testing firmware drivers for the ASIC or SOC before it tapes-out.
+That’s it. My **Raspberry Pi** can reliably run a **SPI** clock of **12MHz**, and most FPGA on-board **USB-UART** bridges can run at **1M baud or faster.** 
