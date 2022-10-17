@@ -11,7 +11,7 @@ The **first byte** sent to the FPGA contains the **Slave ID and Read-not-Write b
 
 The next bytes are the **address data**. The provided RTL allows for a **parameterized** number of address bytes. A SDIO memory interface block might need many address bytes and a simple trigger block might just need a few bits from one byte of address data. The **number of address bytes is flexible**, but the RTL specified Slave ID and number of address bytes needs to correctly transferred to the Python script.
 
-The next bytes are either the **write data** or in the case of a **read, filler bytes** to keep the chip select active (**SPI**). When doing a read, if 5 bytes are wanted, 6 filler bytes need to be written to the FPGA. As **UART does not have a chip select**, I have a **SCARF** version where the **number of bytes** to read is used instead of filler bytes. 
+The next bytes are either the **write data** or in the case of a **read, filler bytes** to keep the chip select active (**SPI**). When doing a read, if 5 bytes are wanted, 6 filler bytes need to be written to the FPGA. As **UART does not have a chip select**, I have a **SCARF** version where the **number of bytes** to read is used instead of filler bytes. The Python code fully takes care of these **finer details**, while remaining **easy to read** and **understand.**
 
 The **maximum number** of read/write data bytes is **determined by the hardware SPI or UART master.** The provided RTL has **no limit.** If the FPGA board’s **USB-UART** bridge is used, the TX and RX buffers are **fixed in size** and must not be exceeded. If **SPI** is used, the **SPI** master’s transmit and receive byte **limits** also must be followed. The provided Python code has places for these limits to be specified.
 
